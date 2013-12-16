@@ -53,9 +53,8 @@ class Configuration implements ConfigurationInterface
                     ->info("the service id of the kernel controller event listener, this class will be automatically registered as a listner")
                 ->end()
 
-                ->scalarNode('validate_timestamp')
-                    ->cannotBeEmpty()
-                    ->defaultValue('francodacosta.caparica.listener.kernel.controller')
+                ->boolean('validate_timestamp')
+                    ->defaultTrue()
                     ->info("should the request timestamp be validaded, this helps to prevent replay attacks")
                 ->end()
 
