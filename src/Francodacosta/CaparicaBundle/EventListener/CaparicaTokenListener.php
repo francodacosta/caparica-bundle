@@ -55,8 +55,8 @@ class CaparicaTokenListener
 
         $params[$this->timestampKey] = $this->getValue($request, $this->timestampKey);
         if (null == $params[$this->timestampKey] ) {
-            throw new \InvalidArgumentException("Missing timestamp", 400);
-
+            // throw new \InvalidArgumentException("Missing timestamp", 400);
+            unset($params[$this->timestampKey] );
         }
 
         $clientId = $this->getValue($request, $this->clientKey);
