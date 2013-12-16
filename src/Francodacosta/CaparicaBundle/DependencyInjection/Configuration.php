@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                     ->info("the service id of the kernel controller event listener, this class will be automatically registered as a listner")
                 ->end()
 
-                ->boolean('validate_timestamp')
+                ->booleanNode('validate_timestamp')
                     ->defaultTrue()
                     ->info("should the request timestamp be validaded, this helps to prevent replay attacks")
                 ->end()
