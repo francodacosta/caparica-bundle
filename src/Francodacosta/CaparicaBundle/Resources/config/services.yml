@@ -16,6 +16,7 @@ parameters:
     francodacosta.caparica.token.timestamp: ""
     francodacosta.caparica.token.signature: ""
     francodacosta.caparica.token.client: ""
+    francodacosta.caparica.request.validate.timestamp: true
 
 services:
 
@@ -51,3 +52,4 @@ services:
             - @francodacosta.caparica.request.signer
         calls:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
+            - [setValidateTimestamp, [%francodacosta.caparica.request.validate.timestamp%]]

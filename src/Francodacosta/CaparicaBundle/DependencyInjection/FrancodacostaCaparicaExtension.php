@@ -44,5 +44,9 @@ class FrancodacostaCaparicaExtension extends Extension
         if (isset($config['kernel_controller_listener'])) {
             $container->setParameter('francodacosta.caparica.listener.kernel.controller.class', $config['kernel_controller_listener']);
         }
+
+        if (isset($config['validate_timestamp'])) {
+            $container->setParameter('francodacosta.caparica.request.validate.timestamp', $config['validate_timestamp']);
+        }
     }
 }
