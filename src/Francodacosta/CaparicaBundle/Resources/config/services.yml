@@ -20,7 +20,7 @@ parameters:
 services:
 
     francodacosta.caparica.listener.kernel.controller:
-        class: francodacosta\CaparicaBundle\EventListener\CaparicaTokenListener
+        class: Francodacosta\CaparicaBundle\EventListener\CaparicaTokenListener
         arguments: [@francodacosta.caparica.request.validator]
         calls:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
