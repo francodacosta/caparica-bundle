@@ -1,0 +1,53 @@
+parameters:
+    # classes
+    francodacosta.caparica.yaml.class : Symfony\Component\Yaml\Yaml
+    francodacosta.caparica.client.class : Caparica\Client\Provider\YamlClientProvider
+    francodacosta.caparica.request.signer.class : Caparica\Crypto\RequestSigner
+    francodacosta.caparica.request.validator.class : Caparica\Security\RequestValidator
+    francodacosta.caparica.listener.kernel.controller.class: ""
+
+    # client provider defenitions
+    francodacosta.caparica.client.provider.id: ""
+
+    francodacosta.caparica.client.provider.yaml.file: %kernel.root_dir%/config/caparica.yml
+    francodacosta.caparica.client.provider.client.class: Caparica\Client\BasicClient
+
+    # config variables
+    francodacosta.caparica.token.timestamp: ""
+    francodacosta.caparica.token.signature: ""
+    francodacosta.caparica.token.client: ""
+
+services:
+
+    francodacosta.caparica.listener.kernel.controller:
+        class: francodacosta\CaparicaBundle\EventListener\CaparicaTokenListener
+        arguments: [@francodacosta.caparica.request.validator]
+        calls:
+            - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
+            - [setTokenKey, [%francodacosta.caparica.token.signature%]]
+            - [setClientKey, [%francodacosta.caparica.token.client%]]
+
+        # tags are added via a compiler pass, so the listener can be overritten
+        # tags:
+        #     - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    francodacosta.caparica.yaml:
+        class: %francodacosta.caparica.yaml.class%
+
+    francodacosta.caparica.client.provider.yaml:
+        class: %francodacosta.caparica.client.class%
+        arguments:
+            - %francodacosta.caparica.client.provider.yaml.file%
+            - @francodacosta.caparica.yaml
+            - %francodacosta.caparica.client.provider.client.class%
+
+    francodacosta.caparica.request.signer:
+        class: %francodacosta.caparica.request.signer.class%
+
+    francodacosta.caparica.request.validator:
+        class: %francodacosta.caparica.request.validator.class%
+        arguments:
+            - @francodacosta.caparica.client.provider
+            - @francodacosta.caparica.request.signer
+        calls:
+            - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]

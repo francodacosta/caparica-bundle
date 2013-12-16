@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "francodacosta/caparica": "~1.0.3"
+        "francodacosta/caparica": "~1.0.3",
+        "guzzle/guzzle": "~3.8.0"
     },
 
     "autoload": {
