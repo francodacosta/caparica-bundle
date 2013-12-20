@@ -72,6 +72,6 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             $signature
         );
 
-        error_log( 'About to send a request: ' . $event['request'] . "\n");
+        // error_log( 'About to send a request: ' . $event['request'] . "\n");
     }
 }

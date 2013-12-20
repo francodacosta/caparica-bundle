@@ -3,6 +3,7 @@
 namespace Francodacosta\CaparicaBundle\EventListener;
 
 use Francodacosta\CaparicaBundle\Controller\CaparicaControllerInterface;
+use Francodacosta\CaparicaBundle\Controller\CaparicaController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Caparica\Security\RequestValidatorInterface;
@@ -14,6 +15,8 @@ class CaparicaTokenListener
     private $tokenKey;
     private $clientKey;
     private $timestampKey;
+
+    private $params;
 
     public function __construct(RequestValidatorInterface $caparicaRequestValidator)
     {
@@ -61,14 +64,19 @@ class CaparicaTokenListener
 
         $clientId = $this->getValue($request, $this->clientKey);
         if (null == $clientId) {
+            error_log("missing client code");
             throw new \InvalidArgumentException("Missing client code", 400);
 
         }
 
         $token = $this->getValue($request, $this->tokenKey);
         if (null == $token) {
+            error_log('missing token');
             throw new \InvalidArgumentException("Missing token", 400);
         }
+
+        $this->params = $params;
+        $this->params[$this->clientKey] = $clientId;
 
         return $caparicaRequestValidator->validate($clientId, $token, $params);
     }
@@ -86,8 +94,14 @@ class CaparicaTokenListener
 
         if ($controller[0] instanceof CaparicaControllerInterface) {
             if (false === $this->validate($event)) {
-                throw new \Exception('Your signature does not match server computed signature', 401);
+                $msg = 'Your signature does not match server computed signature';
+                error_log('[CAPARICA] ' . $msg );
+                throw new \Exception($msg, 401);
 
+            }
+
+            if ($controller[0] instanceof CaparicaController) {
+                $controller[0]->setClientCode($this->params[$this->clientKey]);
             }
         }
 
