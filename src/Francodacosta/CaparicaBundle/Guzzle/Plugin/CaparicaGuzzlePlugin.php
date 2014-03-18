@@ -11,10 +11,12 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
 
     private $config = [
         'keys' => [
-            'timestamp' => 'X-CAPARICA-TIMESTAMP',
-            'signature'  => 'X-CAPARICA-SIG',
-            'client'     => 'X-CAPARICA-CLIENT',
-        ]
+            'timestamp'   => 'X-CAPARICA-TIMESTAMP',
+            'signature'   => 'X-CAPARICA-SIG',
+            'client'      => 'X-CAPARICA-CLIENT',
+            'path'        => 'X-CAPARICA-PATH',
+        ],
+        'includePath' => true,
     ];
 
     private $caparicaClient;
@@ -61,6 +63,13 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             $this->config['keys']['client'],
             $caparicaClient->getCode()
         );
+
+        if ($this->config['includePath']) {
+            $request->setHeader(
+                $this->config['keys']['path'],
+                $request->getPath()
+            );
+        }
 
         $paramsToSign = $this->getParamsToSign($request);
         $paramsToSign[$this->config['keys']['timestamp']] = $timestamp;
