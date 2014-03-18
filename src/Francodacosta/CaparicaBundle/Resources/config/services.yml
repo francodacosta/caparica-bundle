@@ -27,6 +27,8 @@ services:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
             - [setTokenKey, [%francodacosta.caparica.token.signature%]]
             - [setClientKey, [%francodacosta.caparica.token.client%]]
+            - [setPathKey, [%francodacosta.caparica.token.path%]]
+            - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.path%]]
 
         # tags are added via a compiler pass, so the listener can be overritten
         # tags:
@@ -53,5 +55,3 @@ services:
         calls:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
             - [setValidateTimestamp, [%francodacosta.caparica.request.validate.timestamp%]]
-            - [setPathKey, [%francodacosta.caparica.token.path%]]
-            - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.path%]]
