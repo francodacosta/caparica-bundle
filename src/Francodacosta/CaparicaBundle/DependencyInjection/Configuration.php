@@ -58,6 +58,17 @@ class Configuration implements ConfigurationInterface
                     ->info("should the request timestamp be validaded, this helps to prevent replay attacks")
                 ->end()
 
+                ->scalarNode('path_token')
+                    ->cannotBeEmpty()
+                    ->defaultValue('X-CAPARICA-PATH')
+                    ->info("the name of the token holding the request path")
+                ->end()
+
+                ->booleanNode('inclue_path_in_signature')
+                    ->defaultTrue()
+                    ->info("should the request path be included as part of the signature calculation")
+                ->end()
+
             ->end();
 
         return $treeBuilder;

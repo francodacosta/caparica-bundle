@@ -18,6 +18,10 @@
         "guzzle/guzzle": "~3.8.0"
     },
 
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev"
+    },
+
     "autoload": {
         "psr-0": {
             "Francodacosta": "src/"

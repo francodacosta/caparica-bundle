@@ -53,3 +53,5 @@ services:
         calls:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]
             - [setValidateTimestamp, [%francodacosta.caparica.request.validate.timestamp%]]
+            - [setPathKey, [%francodacosta.caparica.token.path%]]
+            - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.path%]]

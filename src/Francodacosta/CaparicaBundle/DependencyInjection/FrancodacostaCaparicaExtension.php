@@ -41,12 +41,20 @@ class FrancodacostaCaparicaExtension extends Extension
             $container->setParameter('francodacosta.caparica.token.client', $config['client_token']);
         }
 
+        if (isset($config['path_token'])) {
+            $container->setParameter('francodacosta.caparica.token.path', $config['path_token']);
+        }
+
         if (isset($config['kernel_controller_listener'])) {
             $container->setParameter('francodacosta.caparica.listener.kernel.controller.class', $config['kernel_controller_listener']);
         }
 
         if (isset($config['validate_timestamp'])) {
             $container->setParameter('francodacosta.caparica.request.validate.timestamp', $config['validate_timestamp']);
+        }
+
+        if (isset($config['inclue_path_in_signature'])) {
+            $container->setParameter('francodacosta.caparica.signature.includes.path', $config['inclue_path_in_signature']);
         }
     }
 }

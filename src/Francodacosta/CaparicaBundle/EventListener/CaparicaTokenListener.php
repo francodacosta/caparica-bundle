@@ -14,6 +14,8 @@ class CaparicaTokenListener
     private $tokenKey;
     private $clientKey;
     private $timestampKey;
+    private $pathKey;
+    private $includePathInSignature = true;
 
     public function __construct(RequestValidatorInterface $caparicaRequestValidator)
     {
@@ -32,6 +34,7 @@ class CaparicaTokenListener
     {
         unset($params[$this->tokenKey]);
         unset($params[$this->timestampKey]);
+        unset($params[$this->pathKey]);
 
         return $params;
     }
@@ -54,6 +57,11 @@ class CaparicaTokenListener
         $params = $this->prepareParametersArray((array) $request->query->getIterator());
 
         $params[$this->timestampKey] = $this->getValue($request, $this->timestampKey);
+
+        if ($this->getIncludePathInSignature() ) {
+            $params[$this->pathKey] = $request->getPathInfo();
+        }
+
         if (null == $params[$this->timestampKey] ) {
             // throw new \InvalidArgumentException("Missing timestamp", 400);
             unset($params[$this->timestampKey] );
@@ -185,6 +193,56 @@ class CaparicaTokenListener
     public function setTimestampKey($timestampKey)
     {
         $this->timestampKey = $timestampKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of pathKey.
+     *
+     * @return mixed
+     */
+    public function getPathKey()
+    {
+        return $this->pathKey;
+    }
+
+    /**
+     * Sets the value of pathKey.
+     *
+     * @param mixed $pathKey the path key
+     *
+     * @return self
+     */
+    public function setPathKey($pathKey)
+    {
+        $this->pathKey = $pathKey;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Gets the value of includePathInSignature.
+     *
+     * @return mixed
+     */
+    public function getIncludePathInSignature()
+    {
+        return $this->includePathInSignature;
+    }
+
+    /**
+     * Sets the value of includePathInSignature.
+     *
+     * @param mixed $includePathInSignature the include path in signature
+     *
+     * @return self
+     */
+    public function setIncludePathInSignature($includePathInSignature)
+    {
+        $this->includePathInSignature = $includePathInSignature;
 
         return $this;
     }
