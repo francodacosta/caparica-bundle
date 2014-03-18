@@ -46,6 +46,13 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
         }
     }
 
+
+    private function getRequestPath(\Guzzle\Http\Message\Request $request) {
+        $ret =  str_replace('/app_dev.php', '', $request->getPath());
+
+        return $ret;
+    }
+
     public function onBeforeSend(\Guzzle\Common\Event $event)
     {
 
@@ -53,6 +60,8 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
         $caparicaClient = $this->caparicaClient;
         $requestSigner = $this->requestSigner;
         $timestamp = date('U');
+
+        $paramsToSign = $this->getParamsToSign($request);
 
         $request->setHeader(
             $this->config['keys']['timestamp'],
@@ -65,13 +74,14 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
         );
 
         if ($this->config['includePath']) {
+            $path = $this->getRequestPath($request);
             $request->setHeader(
                 $this->config['keys']['path'],
-                $request->getPath()
+                $path
             );
+            $paramsToSign[$this->config['keys']['path']] = $path;
         }
 
-        $paramsToSign = $this->getParamsToSign($request);
         $paramsToSign[$this->config['keys']['timestamp']] = $timestamp;
 
         $signature = $requestSigner->sign($paramsToSign, $caparicaClient->getSecret());
