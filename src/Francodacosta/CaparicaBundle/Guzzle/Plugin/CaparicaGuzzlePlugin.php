@@ -41,9 +41,9 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
 
     public function getParamsToSign(\Guzzle\Http\Message\Request $request)
     {
-        if ('get' == strtolower($request->getMethod())) {
+        //if ('get' == strtolower($request->getMethod())) {
             return $request->getQuery()->toArray();
-        }
+        //}
     }
 
 
