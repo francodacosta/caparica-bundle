@@ -7,7 +7,7 @@ use Caparica\Crypto\SignerInterface;
 
 class CaparicaGuzzlePlugin implements EventSubscriberInterface
 {
-    CONST PLUGIN_VERSION='0.0.1';
+    CONST PLUGIN_VERSION='0.0.2';
 
     private $config = [
         'keys' => [
@@ -15,18 +15,18 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             'signature'   => 'X-CAPARICA-SIG',
             'client'      => 'X-CAPARICA-CLIENT',
             'path'        => 'X-CAPARICA-PATH',
-        ],
-        'includePath' => true,
+        ]
     ];
 
     private $caparicaClient;
     private $requestSigner;
+    private $includePath = true;
 
-
-    public function __construct(ClientInterface $client, SignerInterface $requestSigner)
+    public function __construct(ClientInterface $client, SignerInterface $requestSigner, $includePath = false)
     {
         $this->caparicaClient = $client;
         $this->requestSigner = $requestSigner;
+        $this->includePath = $includePath;
     }
 
     public function setConfig(array $config)
@@ -73,7 +73,7 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             $caparicaClient->getCode()
         );
 
-        if ($this->config['includePath']) {
+        if ($this->includePath) {
             $path = $this->getRequestPath($request);
             $request->setHeader(
                 $this->config['keys']['path'],
@@ -91,6 +91,88 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             $signature
         );
 
-        // error_log( 'About to send a request: ' . $event['request'] . "\n");
+        error_log( 'About to send a request: ' . $event['request'] . "\n");
+    }
+
+    /**
+     * Gets the value of config.
+     *
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Gets the value of caparicaClient.
+     *
+     * @return mixed
+     */
+    public function getCaparicaClient()
+    {
+        return $this->caparicaClient;
+    }
+
+    /**
+     * Sets the value of caparicaClient.
+     *
+     * @param mixed $caparicaClient the caparica client
+     *
+     * @return self
+     */
+    public function setCaparicaClient($caparicaClient)
+    {
+        $this->caparicaClient = $caparicaClient;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of requestSigner.
+     *
+     * @return mixed
+     */
+    public function getRequestSigner()
+    {
+        return $this->requestSigner;
+    }
+
+    /**
+     * Sets the value of requestSigner.
+     *
+     * @param mixed $requestSigner the request signer
+     *
+     * @return self
+     */
+    public function setRequestSigner($requestSigner)
+    {
+        $this->requestSigner = $requestSigner;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of includePath.
+     *
+     * @return mixed
+     */
+    public function getIncludePath()
+    {
+        return $this->includePath;
+    }
+
+    /**
+     * Sets the value of includePath.
+     *
+     * @param mixed $includePath the include path
+     *
+     * @return self
+     */
+    public function setIncludePath($includePath)
+    {
+        $this->includePath = $includePath;
+
+        return $this;
     }
 }
