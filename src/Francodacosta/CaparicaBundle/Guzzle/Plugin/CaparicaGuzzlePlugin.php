@@ -15,6 +15,7 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
             'signature'   => 'X-CAPARICA-SIG',
             'client'      => 'X-CAPARICA-CLIENT',
             'path'        => 'X-CAPARICA-PATH',
+            'method'        => 'X-CAPARICA-METHOD',
         ]
     ];
 
@@ -22,11 +23,12 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
     private $requestSigner;
     private $includePath = true;
 
-    public function __construct(ClientInterface $client, SignerInterface $requestSigner, $includePath = false)
+    public function __construct(ClientInterface $client, SignerInterface $requestSigner, $includePath = true, $includeMethod = true)
     {
         $this->caparicaClient = $client;
         $this->requestSigner = $requestSigner;
         $this->includePath = $includePath;
+        $this->includeMethod = $includeMethod;
     }
 
     public function setConfig(array $config)
@@ -80,6 +82,15 @@ class CaparicaGuzzlePlugin implements EventSubscriberInterface
                 $path
             );
             $paramsToSign[$this->config['keys']['path']] = $path;
+        }
+
+        if ($this->includeMethod) {
+            $method = strtoupper($request->getMethod());
+            $request->setHeader(
+                $this->config['keys']['method'],
+                $method
+            );
+            $paramsToSign[$this->config['keys']['method']] = $method;
         }
 
         $paramsToSign[$this->config['keys']['timestamp']] = $timestamp;

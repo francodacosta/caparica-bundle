@@ -69,6 +69,17 @@ class Configuration implements ConfigurationInterface
                     ->info("should the request path be included as part of the signature calculation")
                 ->end()
 
+                ->scalarNode('method_token')
+                    ->cannotBeEmpty()
+                    ->defaultValue('X-CAPARICA-METHOD')
+                    ->info("the name of the token holding the request path")
+                ->end()
+
+                ->booleanNode('inclue_method_in_signature')
+                    ->defaultTrue()
+                    ->info("should the request method be included as part of the signature calculation")
+                ->end()
+
             ->end();
 
         return $treeBuilder;

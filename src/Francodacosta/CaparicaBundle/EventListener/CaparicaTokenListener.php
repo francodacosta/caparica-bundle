@@ -16,7 +16,9 @@ class CaparicaTokenListener
     private $clientKey;
     private $timestampKey;
     private $pathKey;
+    private $methodKey;
     private $includePathInSignature = true;
+    private $includeMethodInSignature = true;
 
     private $params;
 
@@ -38,6 +40,7 @@ class CaparicaTokenListener
         unset($params[$this->tokenKey]);
         unset($params[$this->timestampKey]);
         unset($params[$this->pathKey]);
+        unset($params[$this->methodKey]);
 
         return $params;
     }
@@ -63,6 +66,12 @@ class CaparicaTokenListener
 
         if ($this->getIncludePathInSignature() ) {
             $params[$this->pathKey] = $request->getPathInfo();
+            // error_log('$request->getPathInfo() ' . $request->getPathInfo());
+        }
+
+        if ($this->getIncludeMethodInSignature() ) {
+            $params[$this->methodKey] = $request->getMethod();
+            // error_log('$request->getMethod() ' . $request->getMethod());
         }
 
         if (null == $params[$this->timestampKey] ) {
@@ -257,6 +266,78 @@ class CaparicaTokenListener
     public function setIncludePathInSignature($includePathInSignature)
     {
         $this->includePathInSignature = $includePathInSignature;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of methodKey.
+     *
+     * @return mixed
+     */
+    public function getMethodKey()
+    {
+        return $this->methodKey;
+    }
+
+    /**
+     * Sets the value of methodKey.
+     *
+     * @param mixed $methodKey the method key
+     *
+     * @return self
+     */
+    public function setMethodKey($methodKey)
+    {
+        $this->methodKey = $methodKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of includeMethodInSignature.
+     *
+     * @return mixed
+     */
+    public function getIncludeMethodInSignature()
+    {
+        return $this->includeMethodInSignature;
+    }
+
+    /**
+     * Sets the value of includeMethodInSignature.
+     *
+     * @param mixed $includeMethodInSignature the include method in signature
+     *
+     * @return self
+     */
+    public function setIncludeMethodInSignature($includeMethodInSignature)
+    {
+        $this->includeMethodInSignature = $includeMethodInSignature;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of params.
+     *
+     * @return mixed
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Sets the value of params.
+     *
+     * @param mixed $params the params
+     *
+     * @return self
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
 
         return $this;
     }

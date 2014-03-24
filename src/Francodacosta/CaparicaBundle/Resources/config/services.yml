@@ -16,6 +16,7 @@ parameters:
     francodacosta.caparica.token.timestamp: ""
     francodacosta.caparica.token.signature: ""
     francodacosta.caparica.token.client: ""
+    francodacosta.caparica.token.method: ""
     francodacosta.caparica.request.validate.timestamp: true
 
 services:
@@ -28,7 +29,9 @@ services:
             - [setTokenKey, [%francodacosta.caparica.token.signature%]]
             - [setClientKey, [%francodacosta.caparica.token.client%]]
             - [setPathKey, [%francodacosta.caparica.token.path%]]
+            - [setMethodKey, [%francodacosta.caparica.token.method%]]
             - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.path%]]
+            - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.method%]]
 
         # tags are added via a compiler pass, so the listener can be overritten
         # tags:
