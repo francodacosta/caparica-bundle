@@ -80,6 +80,11 @@ class Configuration implements ConfigurationInterface
                     ->info("should the request method be included as part of the signature calculation")
                 ->end()
 
+                ->scalarNode('on_error_redirect_to')
+                    ->defaultValue('')
+                    ->info('the route name to redirect if an error in authentication is found')
+                ->end();
+
             ->end();
 
         return $treeBuilder;

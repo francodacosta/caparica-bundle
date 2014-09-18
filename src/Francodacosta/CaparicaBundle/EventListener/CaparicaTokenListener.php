@@ -7,6 +7,7 @@ use Francodacosta\CaparicaBundle\Controller\CaparicaController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Caparica\Security\RequestValidatorInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CaparicaTokenListener
 {
@@ -113,8 +114,13 @@ class CaparicaTokenListener
             if (false === $this->validate($event)) {
                 $msg = 'Your signature does not match server computed signature';
                 error_log('[CAPARICA] ' . $msg );
-                throw new \Exception($msg, 401);
+                throw new HttpException(401, $msg);
 
+                $error_route = $this->container->getParameter('francodacosta.caparica.on.error.redirect.to');
+                $redirectUrl = $this->router->generate($error_route, ['code' => 401, 'msg' => $msg]);
+                $event->setController(function() use ($redirectUrl) {
+                    return new RedirectResponse($redirectUrl);
+                });
             }
 
             if ($controller[0] instanceof CaparicaController) {

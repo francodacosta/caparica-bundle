@@ -64,5 +64,9 @@ class FrancodacostaCaparicaExtension extends Extension
         if (isset($config['inclue_method_in_signature'])) {
             $container->setParameter('francodacosta.caparica.signature.includes.method', $config['inclue_method_in_signature']);
         }
+
+        if (isset($config['on_error_redirect_to'])) {
+            $container->setParameter('francodacosta.caparica.on.error.redirect.to', $config['on_error_redirect_to']);
+        }
     }
 }

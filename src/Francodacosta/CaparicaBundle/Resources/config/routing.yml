@@ -1,0 +1,3 @@
+francodacosta_caparicabundle_error:
+    pattern:  /error/auth
+    defaults: { _controller: FrancodacostaCaparicaBundle:Error:message }
