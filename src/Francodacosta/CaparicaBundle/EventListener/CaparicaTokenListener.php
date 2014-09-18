@@ -8,6 +8,19 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Caparica\Security\RequestValidatorInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Francodacosta\CaparicaBundle\Exception\InvalidSignatureException;
+use Francodacosta\CaparicaBundle\Exception\MissingSignatureException;
+use Francodacosta\CaparicaBundle\Exception\MissingClientCodeException;
+use Francodacosta\CaparicaBundle\Exception\ControllerNotAvailableException;
+use Caparica\Exception\MissingTimestampException;
+use Caparica\Exception\OutOfSyncTimestampException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+
+
 
 class CaparicaTokenListener
 {
@@ -20,8 +33,17 @@ class CaparicaTokenListener
     private $methodKey;
     private $includePathInSignature = true;
     private $includeMethodInSignature = true;
+    private $container;
+    private $onErrorRedirectTo;
 
     private $params;
+
+    const ERROR_INVALID_SIG    = 401;
+    const ERROR_INVALID_TS     = 402;
+    const ERROR_MISSING_TS     = 403;
+    const ERROR_MISSING_SIG    = 404;
+    const ERROR_MISSING_CLIENT = 405;
+
 
     public function __construct(RequestValidatorInterface $caparicaRequestValidator)
     {
@@ -83,14 +105,14 @@ class CaparicaTokenListener
         $clientId = $this->getValue($request, $this->clientKey);
         if (null == $clientId) {
             error_log("missing client code");
-            throw new \InvalidArgumentException("Missing client code", 400);
+            throw new MissingClientCodeException("Missing client code", 400);
 
         }
 
         $token = $this->getValue($request, $this->tokenKey);
         if (null == $token) {
             error_log('missing token');
-            throw new \InvalidArgumentException("Missing token", 400);
+            throw new MissingSignatureException("Missing token", 400);
         }
 
         $this->params = $params;
@@ -111,24 +133,77 @@ class CaparicaTokenListener
         }
 
         if ($controller[0] instanceof CaparicaControllerInterface) {
-            if (false === $this->validate($event)) {
-                $msg = 'Your signature does not match server computed signature';
-                error_log('[CAPARICA] ' . $msg );
-                throw new HttpException(401, $msg);
+            try {
 
-                $error_route = $this->container->getParameter('francodacosta.caparica.on.error.redirect.to');
-                $redirectUrl = $this->router->generate($error_route, ['code' => 401, 'msg' => $msg]);
-                $event->setController(function() use ($redirectUrl) {
-                    return new RedirectResponse($redirectUrl);
-                });
+                if (false === $this->validate($event)) {
+                    throw new InvalidSignatureException();
+                }
+
+                if ($controller[0] instanceof CaparicaController) {
+                    $controller[0]->setClientCode($this->params[$this->clientKey]);
+                }
+            } catch (\Exception $e) {
+                $code = 500;
+                if ($e instanceof MissingTimestampException) {
+                    $code = self::ERROR_MISSING_TS;
+                }
+                if ($e instanceof OutOfSyncTimestampException) {
+                    $code = self::ERROR_INVALID_TS;
+                }
+                if ($e instanceof MissingClientCodeException) {
+                    $code = self::ERROR_MISSING_CLIENT;
+                }
+                if ($e instanceof MissingSignatureException) {
+                    $code = self::ERROR_MISSING_SIG;
+                }
+                if ($e instanceof InvalidSignatureException) {
+                    $code = self::ERROR_INVALID_SIG;
+                }
+
+
+                throw new ControllerNotAvailableException('', $code);
+
+                // $error_route = $this->getOnErrorRedirectTo();
+                // $redirectUrl = $this->getContainer()->get('router')->generate($error_route);
+                // // $event->setController(function() use ($redirectUrl) {
+                // //     var_dump(new Response($redirectUrl)); die;
+                // //     return new Response($redirectUrl);
+                // // });
+                // // $path['_controller'] = $controller;
+                // $subRequest = $this->getContainer()->get('request_stack')->getCurrentRequest()->duplicate(['code' => $code], null, explode('/',$redirectUrl));
+                // var_dump($redirectUrl);
+                // var_dump($subRequest);
+                // die;
+                //
+                // return $this->getContainer()->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
             }
 
-            if ($controller[0] instanceof CaparicaController) {
-                $controller[0]->setClientCode($this->params[$this->clientKey]);
-            }
+
+
         }
 
     }
+
+
+    public function onKernelException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+        $kernel = $event->getKernel();
+
+        if (!($exception instanceof ControllerNotAvailableException)) {
+            return;
+        }
+
+        $attributes = array(
+            '_controller' => $this->getOnErrorRedirectTo(),
+            'code' => $exception->getCode(),
+        );
+        $request = $event->getRequest()->duplicate(null, null, $attributes);
+        $response = $kernel->handle($request, HttpKernelInterface::SUB_REQUEST, false);
+
+        $event->setResponse($response);
+    }
+
 
     /**
      * Gets the value of caparicaRequestValidator.
@@ -347,4 +422,56 @@ class CaparicaTokenListener
 
         return $this;
     }
+
+
+
+    /**
+     * Get the value of On Error Redirect To
+     *
+     * @return mixed
+     */
+    public function getOnErrorRedirectTo()
+    {
+        return $this->onErrorRedirectTo;
+    }
+
+    /**
+     * Set the value of On Error Redirect To
+     *
+     * @param mixed onErrorRedirectTo
+     *
+     * @return self
+     */
+    public function setOnErrorRedirectTo($value)
+    {
+        $this->onErrorRedirectTo = $value;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of Container
+     *
+     * @return mixed
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Set the value of Container
+     *
+     * @param mixed container
+     *
+     * @return self
+     */
+    public function setContainer($value)
+    {
+        $this->container = $value;
+
+        return $this;
+    }
+
 }

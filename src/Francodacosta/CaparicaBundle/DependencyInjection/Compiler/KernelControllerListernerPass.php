@@ -29,6 +29,16 @@ class KernelControllerListernerPass implements CompilerPassInterface
                 'method' => 'onKernelController',
             )
         );
+
+        $serviceDefinition->addTag(
+            'kernel.event_listener',
+            array (
+                'event' => 'kernel.exception',
+                'method' => 'onKernelException',
+            )
+        );
+
+
         $container->setDefinition($listenerId, $serviceDefinition);
     }
 }

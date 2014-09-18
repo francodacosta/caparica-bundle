@@ -32,6 +32,8 @@ services:
             - [setMethodKey, [%francodacosta.caparica.token.method%]]
             - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.path%]]
             - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.method%]]
+            - [setContainer, [@service_container]]
+            - [setOnErrorRedirectTo, [%francodacosta.caparica.on.error.redirect.to%]]
 
         # tags are added via a compiler pass, so the listener can be overritten
         # tags:

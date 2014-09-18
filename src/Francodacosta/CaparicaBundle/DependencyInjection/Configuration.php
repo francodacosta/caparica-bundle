@@ -81,9 +81,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
 
                 ->scalarNode('on_error_redirect_to')
-                    ->defaultValue('')
+                    ->defaultValue('FrancodacostaCaparicaBundle:Error:message')
                     ->info('the route name to redirect if an error in authentication is found')
-                ->end();
+                ->end()
 
             ->end();
 
