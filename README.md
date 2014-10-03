@@ -46,3 +46,10 @@ client_alias:
     secret: "the client api secret"
 
 ```
+
+### Step 3: Configure your controller
+
+Make sure you controller implements the ```Francodacosta\CaparicaBundle\Controller\CaparicaControllerInterface```.
+The  ```Francodacosta\CaparicaBundle\Controller\CaparicaController``` extends the Symfony controller and has some handy methods.
+
+and that's it all controller actions accessed via a route will have to be signed
