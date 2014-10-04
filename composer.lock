@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f7fafd5437f6aa91dfa75d968937d5dc",
+    "hash": "b3e912071ae09b7b031c7232bab167d8",
     "packages": [
         {
             "name": "francodacosta/caparica",
-            "version": "dev-1.0-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/francodacosta/caparica.git",
-                "reference": "3893567fc3b5292ef33c806aa868a42e23d5f1fb"
+                "reference": "1bada802f31eb98f11c82ed110c7ca80ecd7906b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/francodacosta/caparica/zipball/3893567fc3b5292ef33c806aa868a42e23d5f1fb",
-                "reference": "3893567fc3b5292ef33c806aa868a42e23d5f1fb",
+                "url": "https://api.github.com/repos/francodacosta/caparica/zipball/1bada802f31eb98f11c82ed110c7ca80ecd7906b",
+                "reference": "1bada802f31eb98f11c82ed110c7ca80ecd7906b",
                 "shasum": ""
             },
             "require": {
@@ -26,6 +26,10 @@
             "require-dev": {
                 "evert/phpdoc-md": "~0.0.7",
                 "phpdocumentor/phpdocumentor": "2.*"
+            },
+            "suggest": {
+                "doctrine/orm": "to use the DOCTRINE client provider",
+                "symfony/yaml": "to use the YAML client provider"
             },
             "type": "library",
             "autoload": {
@@ -52,202 +56,7 @@
                 "rest",
                 "secure"
             ],
-            "time": "2014-10-03 09:45:03"
-        },
-        {
-            "name": "francodacosta/caparica-guzzle-plugin",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/francodacosta/caparica-guzzle-plugin.git",
-                "reference": "909b2dd9bedab746f3db1c5d85e1ec920f5bb983"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/francodacosta/caparica-guzzle-plugin/zipball/909b2dd9bedab746f3db1c5d85e1ec920f5bb983",
-                "reference": "909b2dd9bedab746f3db1c5d85e1ec920f5bb983",
-                "shasum": ""
-            },
-            "require": {
-                "francodacosta/caparica": "dev-1.0-dev",
-                "guzzle/guzzle": "*",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Francodacosta": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nuno Costa",
-                    "email": "nuno@francodacosta.com",
-                    "homepage": "http://www.francodacosta.com"
-                }
-            ],
-            "description": "Guzzle lugin to help making secure requests to your REST api",
-            "homepage": "https://github.com/francodacosta/caparica-guzzle-plugin",
-            "keywords": [
-                "api",
-                "hmac",
-                "rest",
-                "secure"
-            ],
-            "time": "2014-10-03 09:43:24"
-        },
-        {
-            "name": "guzzle/guzzle",
-            "version": "v3.8.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
-                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.3",
-                "symfony/event-dispatcher": ">=2.1"
-            },
-            "replace": {
-                "guzzle/batch": "self.version",
-                "guzzle/cache": "self.version",
-                "guzzle/common": "self.version",
-                "guzzle/http": "self.version",
-                "guzzle/inflection": "self.version",
-                "guzzle/iterator": "self.version",
-                "guzzle/log": "self.version",
-                "guzzle/parser": "self.version",
-                "guzzle/plugin": "self.version",
-                "guzzle/plugin-async": "self.version",
-                "guzzle/plugin-backoff": "self.version",
-                "guzzle/plugin-cache": "self.version",
-                "guzzle/plugin-cookie": "self.version",
-                "guzzle/plugin-curlauth": "self.version",
-                "guzzle/plugin-error-response": "self.version",
-                "guzzle/plugin-history": "self.version",
-                "guzzle/plugin-log": "self.version",
-                "guzzle/plugin-md5": "self.version",
-                "guzzle/plugin-mock": "self.version",
-                "guzzle/plugin-oauth": "self.version",
-                "guzzle/service": "self.version",
-                "guzzle/stream": "self.version"
-            },
-            "require-dev": {
-                "doctrine/cache": "*",
-                "monolog/monolog": "1.*",
-                "phpunit/phpunit": "3.7.*",
-                "psr/log": "1.0.*",
-                "symfony/class-loader": "*",
-                "zendframework/zend-cache": "<2.3",
-                "zendframework/zend-log": "<2.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle": "src/",
-                    "Guzzle\\Tests": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Guzzle Community",
-                    "homepage": "https://github.com/guzzle/guzzle/contributors"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "time": "2014-01-28 22:29:15"
-        },
-        {
-            "name": "symfony/event-dispatcher",
-            "version": "v2.5.5",
-            "target-dir": "Symfony/Component/EventDispatcher",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "f6281337bf5f985f585d1db6a83adb05ce531f46"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/f6281337bf5f985f585d1db6a83adb05ce531f46",
-                "reference": "f6281337bf5f985f585d1db6a83adb05ce531f46",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/config": "~2.0",
-                "symfony/dependency-injection": "~2.0,<2.6.0",
-                "symfony/stopwatch": "~2.2"
-            },
-            "suggest": {
-                "symfony/dependency-injection": "",
-                "symfony/http-kernel": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\EventDispatcher\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony EventDispatcher Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-09-28 15:56:11"
+            "time": "2014-10-04 12:34:35"
         }
     ],
     "packages-dev": [
@@ -322,7 +131,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "francodacosta/caparica": 20,
-        "francodacosta/caparica-guzzle-plugin": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,

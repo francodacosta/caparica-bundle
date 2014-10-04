@@ -14,13 +14,16 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "francodacosta/caparica": "dev-master",
-        "francodacosta/caparica-guzzle-plugin": "dev-master",
-        "guzzle/guzzle": "~3.8.0"
+        "francodacosta/caparica": "dev-master"
+
     },
 
     "require-dev": {
         "mockery/mockery": "dev-master@dev"
+    },
+
+    "suggests" : {
+        "francodacosta/caparica-guzzle-plugin": "to automaticaly sign HTTP requests"
     },
 
     "autoload": {
