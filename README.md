@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/francodacosta/caparica.png?branch=master)](https://travis-ci.org/francodacosta/caparica) [![Total Downloads](https://poser.pugx.org/francodacosta/caparica-bundle/downloads.svg)](https://packagist.org/packages/francodacosta/caparica-bundle) [![Latest Stable Version](https://poser.pugx.org/francodacosta/caparica-bundle/v/stable.svg)](https://packagist.org/packages/francodacosta/caparica-bundle)
+
 # Getting started with Caparica Bundle
 
 ## Instalation
