@@ -11,6 +11,7 @@
  */
 namespace Francodacosta\CaparicaBundle\EventListener;
 
+use Caparica\Client\Provider\ClientProviderInterface;
 use Francodacosta\CaparicaBundle\Controller\CaparicaControllerInterface;
 use Francodacosta\CaparicaBundle\Controller\CaparicaController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -44,7 +45,10 @@ class CaparicaTokenListener
     private $includeMethodInSignature = true;
     private $container;
     private $onErrorRedirectTo;
-
+    /**
+     * @type ClientProviderInterface
+     */
+    private $clientProvider;
     private $params;
 
     const ERROR_INVALID_SIG    = 401;
@@ -97,13 +101,11 @@ class CaparicaTokenListener
         $params[$this->timestampKey] = $this->getValue($request, $this->timestampKey);
 
         if ($this->getIncludePathInSignature() ) {
-            $params[$this->pathKey] = $request->getPathInfo();
-            // error_log('$request->getPathInfo() ' . $request->getPathInfo());
+            $params[$this->pathKey] = $request->getBaseUrl() . $request->getPathInfo();
         }
 
         if ($this->getIncludeMethodInSignature() ) {
             $params[$this->methodKey] = $request->getMethod();
-            // error_log('$request->getMethod() ' . $request->getMethod());
         }
 
         if (null == $params[$this->timestampKey] ) {
@@ -127,7 +129,16 @@ class CaparicaTokenListener
         $this->params = $params;
         $this->params[$this->clientKey] = $clientId;
 
-        return $caparicaRequestValidator->validate($clientId, $token, $params);
+        try {
+            $clientProvider = $this->getClientProvider();
+            $client = $clientProvider->getByClientCode($clientId);
+        } catch (\Exception $e) {
+            // someting went wrong fetching the client, let's be safe and deny the requests
+            error_log('[Caparica] error fetching the client: ' . $e->getMessage());
+            return false;
+        }
+
+        return $caparicaRequestValidator->validate($client, $token, $params);
     }
 
     public function onKernelController(FilterControllerEvent $event)
@@ -151,6 +162,7 @@ class CaparicaTokenListener
                 if ($controller[0] instanceof CaparicaController) {
                     $controller[0]->setClientCode($this->params[$this->clientKey]);
                 }
+
             } catch (\Exception $e) {
                 $code = 500;
                 if ($e instanceof MissingTimestampException) {
@@ -169,22 +181,8 @@ class CaparicaTokenListener
                     $code = self::ERROR_INVALID_SIG;
                 }
 
+                throw new ControllerNotAvailableException($e->getMessage(), $code);
 
-                throw new ControllerNotAvailableException('', $code);
-
-                // $error_route = $this->getOnErrorRedirectTo();
-                // $redirectUrl = $this->getContainer()->get('router')->generate($error_route);
-                // // $event->setController(function() use ($redirectUrl) {
-                // //     var_dump(new Response($redirectUrl)); die;
-                // //     return new Response($redirectUrl);
-                // // });
-                // // $path['_controller'] = $controller;
-                // $subRequest = $this->getContainer()->get('request_stack')->getCurrentRequest()->duplicate(['code' => $code], null, explode('/',$redirectUrl));
-                // var_dump($redirectUrl);
-                // var_dump($subRequest);
-                // die;
-                //
-                // return $this->getContainer()->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
             }
 
 
@@ -200,6 +198,7 @@ class CaparicaTokenListener
         $kernel = $event->getKernel();
 
         if (!($exception instanceof ControllerNotAvailableException)) {
+            error_log($exception->getMessage());
             return;
         }
 
@@ -479,6 +478,31 @@ class CaparicaTokenListener
     public function setContainer($value)
     {
         $this->container = $value;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of Client Provider
+     *
+     * @return ClientProviderInterface
+     */
+    public function getClientProvider()
+    {
+        return $this->clientProvider;
+    }
+
+    /**
+     * Set the value of Client Provider
+     *
+     * @param mixed clientProvider
+     *
+     * @return self
+     */
+    public function setClientProvider(ClientProviderInterface $value)
+    {
+        $this->clientProvider = $value;
 
         return $this;
     }

@@ -15,7 +15,7 @@ class ErrorController extends Controller
 
         switch($code) {
             case \Francodacosta\CaparicaBundle\EventListener\CaparicaTokenListener::ERROR_INVALID_SIG :
-                $msg = "Your signature does not match the server generated one";
+                $msg = "Your signature does not match the server generated one for the client code provided";
                 $statusMessage = 'Unauthorized';
                 $status = 401;
                 break;
@@ -61,6 +61,7 @@ class ErrorController extends Controller
             ]
         );
 
+        $response->setStatusCode($status);
         return $response;
 
     }

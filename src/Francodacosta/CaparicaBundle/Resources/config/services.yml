@@ -7,7 +7,7 @@ parameters:
     francodacosta.caparica.listener.kernel.controller.class: ""
 
     # client provider defenitions
-    francodacosta.caparica.client.provider.id: ""
+    francodacosta.caparica.client.provider.id: @francodacosta.caparica.client.provider.yaml
 
     francodacosta.caparica.client.provider.yaml.file: %kernel.root_dir%/config/caparica.yml
     francodacosta.caparica.client.provider.client.class: Caparica\Client\BasicClient
@@ -34,6 +34,7 @@ services:
             - [setIncludePathInSignature, [%francodacosta.caparica.signature.includes.method%]]
             - [setContainer, [@service_container]]
             - [setOnErrorRedirectTo, [%francodacosta.caparica.on.error.redirect.to%]]
+            - [setClientProvider, [@francodacosta.caparica.client.provider]]
 
         # tags are added via a compiler pass, so the listener can be overritten
         # tags:
@@ -55,7 +56,6 @@ services:
     francodacosta.caparica.request.validator:
         class: %francodacosta.caparica.request.validator.class%
         arguments:
-            - @francodacosta.caparica.client.provider
             - @francodacosta.caparica.request.signer
         calls:
             - [setTimestampKey, [%francodacosta.caparica.token.timestamp%]]

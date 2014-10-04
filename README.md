@@ -35,7 +35,7 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Add a client
+### Step 3: Configure a client
 
 So that the server can verify the client signature it needs to know the client/api id and secret
 
@@ -46,10 +46,16 @@ If using the ```YamlClientProvider``` edit the file : ```app/config/caparica.yml
 client_alias:
     code: "the client code"
     secret: "the client api secret"
-
 ```
 
-### Step 3: Configure your controller
+add the following to your ```app/config.yml``` file
+
+```yaml
+francodacosta_caparica:
+    client_provider_id: francodacosta.caparica.client.provider.yaml
+```
+
+### Step 4: Configure your controller
 
 Make sure you controller implements the ```Francodacosta\CaparicaBundle\Controller\CaparicaControllerInterface```.
 The  ```Francodacosta\CaparicaBundle\Controller\CaparicaController``` extends the Symfony controller and has some handy methods.
