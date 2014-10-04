@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "francodacosta/caparica": "dev-master"
+        "francodacosta/caparica": "~1.0"
 
     },
 
